@@ -116,7 +116,7 @@ systemctl start wg-quick@wg0.service
 
 aws s3 mb "s3://$HOSTNAME"
 aws s3 cp $_client_conf "s3://$HOSTNAME"
-# url=$(aws s3 presign "s3://${HOSTNAME}/${_client_name}.conf")
+aws s3 presign "s3://${HOSTNAME}/${_client_name}.conf"
 # aws ses send-email --from charles.redmond+ses@gmail.com --to charles.redmond+ses@gmail.com --html "<a href='$url'>$url</a>" --subject "vpn conf"
 
 
