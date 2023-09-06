@@ -64,8 +64,8 @@ E_O_F_WG
 
 mkdir "$dest/scripts"
 
-mv "/home/ec2-user/vpnif.firewall-up.sh" "$dest/scripts"
-mv "/home/ec2-user/vpnif.firewall-down.sh" "$dest/scripts"
+mv "/home/ec2-user/vpnif.firewall-up.sh" "$dest/scripts/${vpnif}.firewall-up.sh"
+mv "/home/ec2-user/vpnif.firewall-down.sh" "$dest/scripts/${vpnif}.firewall-down.sh"
 
 mv "/home/ec2-user/10-wireguard.conf" /etc/sysctl.d
 
