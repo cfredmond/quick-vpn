@@ -33,13 +33,13 @@ _client_conf="${dest}/client-config/${_client_name}.conf" # client config
 _client_dns_ip="1.1.1.1" # I am setting cloudflare but you can set whatever you want
 _bak_conf="${dest}/client-config/${vpnif}.conf.$now" # backup main wired $wgconf file
 
-yum upgrade
+yum upgrade -y
 amazon-linux-extras install -y epel
 
 # Download it
 wget --output-document="$rwfile" "$rwurl"
-yum clean all
-yum install wireguard-dkms wireguard-tools
+yum clean all -y
+yum install -y wireguard-dkms wireguard-tools
 
 pushd /etc/wireguard/
 umask 077
@@ -116,7 +116,7 @@ systemctl start wg-quick@wg0.service
 
 aws s3 mb "s3://$HOSTNAME"
 aws s3 cp $_client_conf "s3://$HOSTNAME"
-url=$(aws s3 presign "s3://${HOSTNAME}/${_client_name}.conf")
-aws ses send-email --from charles.redmond+ses@gmail.com --to charles.redmond+ses@gmail.com --html "<a href='$url'>$url</a>" --subject "vpn conf"
+# url=$(aws s3 presign "s3://${HOSTNAME}/${_client_name}.conf")
+# aws ses send-email --from charles.redmond+ses@gmail.com --to charles.redmond+ses@gmail.com --html "<a href='$url'>$url</a>" --subject "vpn conf"
 
 
