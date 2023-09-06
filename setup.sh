@@ -2,6 +2,9 @@
 
 # https://github.com/cfredmond/vpn/archive/refs/heads/main.zip
 
+#
+export AWS_DEFAULT_REGION=us-east-1
+
 # set repo url and file #
 rwfile="/etc/yum.repos.d/wireguard.repo"
 rwurl="https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo"
