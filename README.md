@@ -46,7 +46,7 @@
 ```
 2. connect to ec2 instance. download and run installer
 ```bash
-wget https://github.com/cfredmond/quick-vpn/archive/refs/tags/poc.zip && \
+wget https://github.com/cfredmond/quick-vpn/archive/refs/tags/v0.0.1.zip && \
 unzip poc.zip && \
 cp quick-vpn-poc/* . && \
 chmod +x setup.sh && \
