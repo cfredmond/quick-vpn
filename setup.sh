@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# https://github.com/cfredmond/vpn/archive/refs/heads/main.zip
+
 # set repo url and file #
 rwfile="/etc/yum.repos.d/wireguard.repo"
 rwurl="https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo"
@@ -109,10 +111,9 @@ EOF_WG_CONG
 systemctl enable wg-quick@wg0.service
 systemctl start wg-quick@wg0.service
 
-# aws s3 mb "s3://$HOSTNAME"
-# cp client file to s3
-# VPN_CONF_LINK = generate a presigned url
+aws s3 mb "s3://$HOSTNAME"
+aws s3 cp $_client_conf "s3://$HOSTNAME"
+url=$(aws s3 presign "s3://${HOSTNAME}/${_client_name}.conf")
+aws ses send-email --from charles.redmond+ses@gmail.com --to charles.redmond+ses@gmail.com --html "<a href='$url'>$url</a>" --subject "vpn conf"
 
-# aws ses send-email --from charles.redmond+ses@gmail.com --to charles.redmond+ses@gmail.com --text "$VPN_CONF_LINK" --subject "vpn conf"
 
-# aws ses send-email --from charles.redmond+ses@gmail.com --to charles.redmond+ses@gmail.com --text "https://s3.amazonaws.com/ip-172-31-78-201.ec2.internal/client.conf?AWSAccessKeyId=ASIAXUQDOWHQAKPN3F6P&Expires=1694005770&x-amz-security-token=IQoJb3JpZ2luX2VjEJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDUFMKYNBaPgX034fYahHgaxwv7%2BwFTrWrJ5u6PyNvUTgIgSAO5ixPct6KNXnnq5fa1557WDw2S3LXqCoopAMg7d1IqtAUIdRACGgw1MjUwNjcwMDY0MzIiDImF0GUKRTq1SAk7eyqRBeYTwPs7Ux1vseu9DmaHN7Z1Dmk4qGLSTM3KtaEVtYPQF9DIeNk5DbADY4aAxEPzxiIYxEEZ5jPcqtg1v5R7vPQBSKhQEXNieKEaccZdSeubM7MLN9VtKwS0knIagenXJZk4AqwWNXAo4S4p5g9z6xmkjwXaXuKF3kNPzGGgkJJeiB%2BD2XJxxh2ifn9pagA85Dc0mGOfM7Iho8MOgLu2vJyDTWXE%2BQWiamARvHq5HLBSySE3GRTcaFONHpisRUIdu8Wic7peBq%2Bd3kN5qAwjgNP4gncjSMWQtYSpD%2B2OoZgdQW2D0nSbypvUKvTFrsBWnRBTb4FW15tO36DQBm6wkGQqzAG2kzniUAZCAO1Y%2F92SdAlBpaxdzh4IbUCqUEcngmpiTx88sQlntwCEEYdgHgFYgvrgzTS2I%2FTf%2FfgXgrqzB%2Fc46ojmGCBYVOob9%2B7YohjSnztrltLCQCmDDRUL5nA3tsj%2BnhHOU48YeJ%2FVtea3ePrawYXJyx0qc97gEuJjgE3i%2Fd21cOHz%2FmGvuUG8YjdHBGDntX3YCH1YXZHga6qvzC01rDdCY7ZbRL6Bwi4kLeBpoi8UHoLEbqfXVuJ2Zod9Kt2RZaVwizbi3J2ykxDLLjiDQjkyBE%2BsZXsMIZ3%2BDuBNic7XS9XhLwFmhVTdVSlgNg%2F5CXfd6AMSpf%2FwZv5RmoBnBb3H9IVhKLXhOuD88ndmuUhnJdmAfBryy5OugwyQRaTurohatI%2BpUCyr2VDIJStVKFhldJ98bysfl1CMHUOZcokbi6uYyU%2FMuDOBsEZotxBIlVek493rCzrn0HOqaIePrNBZVKxBTjJfzHdVdL9aU36gzxoXLlEyUGEyoRDky%2FN5UYaaQMYzrZiRTtqjHDCl1uGnBjqxAW7gWzF8J7J0QlRFfnp3Az71yCRfrIdoX%2F6%2BTzPM0eANPUujtBT8%2ByWeZGNoNnsFavSIFQH%2Ft3xs38RynQuZeCkdTpPgJMhJuWwwgvUByFmDO7vqLhzL5y6lheOxGkq4car9MpzBqiJcW1byJ%2BymsTDo1hnloIN%2BGNRrGiFrvSyJ26q9bltcD4%2BivUQa8H185wV4kJ5421L5iZGcX4qbdILqrM%2FUpA06nbLRQAqT9j5tgQ%3D%3D&Signature=fckZxa1kI2FPW4QC7C33pQ6kTsU%3D" --subject "vpn conf"
