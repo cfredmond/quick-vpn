@@ -1,9 +1,11 @@
+#!/bin/bash
+
 # set repo url and file #
-export rwfile="/etc/yum.repos.d/wireguard.repo"
-export rwurl="https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo"
+rwfile="/etc/yum.repos.d/wireguard.repo"
+rwurl="https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo"
 
 
-#
+
 dest="/etc/wireguard" # WG server main config dir
 vpnif="wg0" # Wireguard interface name
 _vpn_server_ip='10.106.28.1/32' # WG server's private IP
@@ -34,7 +36,7 @@ wget --output-document="$rwfile" "$rwurl"
 yum clean all
 yum install wireguard-dkms wireguard-tools
 
-cd /etc/wireguard/
+pushd /etc/wireguard/
 umask 077
 
 wg genkey | tee "${privatekey}" | wg pubkey > "${publkey}"
@@ -60,7 +62,13 @@ PostDown = ${dest}/scripts/${vpnif}.firewall-down.sh
  
 E_O_F_WG
 
-mv 10-wireguard.conf /etc/sysctl.d
+mkdir "$dest/scripts"
+
+mv "/home/ec2-user/vpnif.firewall-up.sh" "$dest/scripts"
+mv "/home/ec2-user/vpnif.firewall-down.sh" "$dest/scripts"
+
+mv "/home/ec2-user/10-wireguard.conf" /etc/sysctl.d
+
 sysctl -p /etc/sysctl.d/10-wireguard.conf
 
 chmod -v +x /etc/wireguard/scripts/*.sh
@@ -101,9 +109,10 @@ EOF_WG_CONG
 systemctl enable wg-quick@wg0.service
 systemctl start wg-quick@wg0.service
 
-aws s3 mb "s3://$HOSTNAME"
+# aws s3 mb "s3://$HOSTNAME"
 # cp client file to s3
 # VPN_CONF_LINK = generate a presigned url
 
-# VPN_CONF='conf'
-# aws ses send-email --from charles.redmond+ses@gmail.com --to charles.redmond+ses@gmail.com --text "$VPN_CONF_LINK" --html "<a>$VPN_CONF</a>" --subject "vpn conf"
+# aws ses send-email --from charles.redmond+ses@gmail.com --to charles.redmond+ses@gmail.com --text "$VPN_CONF_LINK" --subject "vpn conf"
+
+# aws ses send-email --from charles.redmond+ses@gmail.com --to charles.redmond+ses@gmail.com --text "https://s3.amazonaws.com/ip-172-31-78-201.ec2.internal/client.conf?AWSAccessKeyId=ASIAXUQDOWHQAKPN3F6P&Expires=1694005770&x-amz-security-token=IQoJb3JpZ2luX2VjEJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDUFMKYNBaPgX034fYahHgaxwv7%2BwFTrWrJ5u6PyNvUTgIgSAO5ixPct6KNXnnq5fa1557WDw2S3LXqCoopAMg7d1IqtAUIdRACGgw1MjUwNjcwMDY0MzIiDImF0GUKRTq1SAk7eyqRBeYTwPs7Ux1vseu9DmaHN7Z1Dmk4qGLSTM3KtaEVtYPQF9DIeNk5DbADY4aAxEPzxiIYxEEZ5jPcqtg1v5R7vPQBSKhQEXNieKEaccZdSeubM7MLN9VtKwS0knIagenXJZk4AqwWNXAo4S4p5g9z6xmkjwXaXuKF3kNPzGGgkJJeiB%2BD2XJxxh2ifn9pagA85Dc0mGOfM7Iho8MOgLu2vJyDTWXE%2BQWiamARvHq5HLBSySE3GRTcaFONHpisRUIdu8Wic7peBq%2Bd3kN5qAwjgNP4gncjSMWQtYSpD%2B2OoZgdQW2D0nSbypvUKvTFrsBWnRBTb4FW15tO36DQBm6wkGQqzAG2kzniUAZCAO1Y%2F92SdAlBpaxdzh4IbUCqUEcngmpiTx88sQlntwCEEYdgHgFYgvrgzTS2I%2FTf%2FfgXgrqzB%2Fc46ojmGCBYVOob9%2B7YohjSnztrltLCQCmDDRUL5nA3tsj%2BnhHOU48YeJ%2FVtea3ePrawYXJyx0qc97gEuJjgE3i%2Fd21cOHz%2FmGvuUG8YjdHBGDntX3YCH1YXZHga6qvzC01rDdCY7ZbRL6Bwi4kLeBpoi8UHoLEbqfXVuJ2Zod9Kt2RZaVwizbi3J2ykxDLLjiDQjkyBE%2BsZXsMIZ3%2BDuBNic7XS9XhLwFmhVTdVSlgNg%2F5CXfd6AMSpf%2FwZv5RmoBnBb3H9IVhKLXhOuD88ndmuUhnJdmAfBryy5OugwyQRaTurohatI%2BpUCyr2VDIJStVKFhldJ98bysfl1CMHUOZcokbi6uYyU%2FMuDOBsEZotxBIlVek493rCzrn0HOqaIePrNBZVKxBTjJfzHdVdL9aU36gzxoXLlEyUGEyoRDky%2FN5UYaaQMYzrZiRTtqjHDCl1uGnBjqxAW7gWzF8J7J0QlRFfnp3Az71yCRfrIdoX%2F6%2BTzPM0eANPUujtBT8%2ByWeZGNoNnsFavSIFQH%2Ft3xs38RynQuZeCkdTpPgJMhJuWwwgvUByFmDO7vqLhzL5y6lheOxGkq4car9MpzBqiJcW1byJ%2BymsTDo1hnloIN%2BGNRrGiFrvSyJ26q9bltcD4%2BivUQa8H185wV4kJ5421L5iZGcX4qbdILqrM%2FUpA06nbLRQAqT9j5tgQ%3D%3D&Signature=fckZxa1kI2FPW4QC7C33pQ6kTsU%3D" --subject "vpn conf"
