@@ -45,10 +45,15 @@
 }
 ```
 2. connect to ec2 instance. download and run installer
-   - wget https://github.com/cfredmond/quick-vpn/archive/refs/tags/poc.zip
-   - unzip poc.zip
-   - cp quick-vpn-poc/* .
-   - chmod +x setup.sh
-   - sudo ./setup.sh
-   - download conf
-3. import and activate tunnel
+```bash
+wget https://github.com/cfredmond/quick-vpn/archive/refs/tags/poc.zip && \
+unzip poc.zip && \
+cp quick-vpn-poc/* . && \
+chmod +x setup.sh && \
+sudo ./setup.sh
+```
+3. download conf file
+```bash
+...
+```
+4. import and activate tunnel
