@@ -52,8 +52,3 @@ cp quick-vpn-0.0.1/* . && \
 chmod +x setup.sh && \
 sudo ./setup.sh
 ```
-3. download conf file
-```bash
-...
-```
-4. import and activate tunnel
