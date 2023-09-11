@@ -1,5 +1,7 @@
 # quick vpn
 
+Acceptance criteria - user can visit url and download conf. conf selected marked as 'in-use'. if no available conf's user displayed error message.
+
 ## requirements
 - aws
 - wireguard client
