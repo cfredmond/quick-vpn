@@ -65,10 +65,14 @@ systemctl start wg-quick@wg0.service
 
 
 # install docker
-yum install docker
+yum install docker -y
+
 usermod -a -G docker ec2-user
-yum install python3-pip
-pip3 install docker-compose
+
+wget https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) 
+mv docker-compose-$(uname -s)-$(uname -m) /usr/local/bin/docker-compose
+chmod -v +x /usr/local/bin/docker-compose
 
 systemctl enable docker.service
 systemctl start docker.service
+
