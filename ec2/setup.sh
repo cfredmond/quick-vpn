@@ -12,6 +12,8 @@ publkey="${dest}/$HOSTNAME.${vpnif}.publickey" # WG server pub key
 privatekey="${dest}/$HOSTNAME.${vpnif}.privatekey" # WG server private key
 pskkey="${dest}/$HOSTNAME.${vpnif}.presharedkey" # WG server shared key
 wgconf="/etc/wireguard/${vpnif}.conf" # WG server config file
+now=$(date +"%m-%d-%Y_%H_%M_%S") # get date and time stamp 
+_bak_conf="${dest}/client-config/${vpnif}.conf.$now" # backup main wired $wgconf file
 
 yum upgrade -y
 amazon-linux-extras install -y epel
