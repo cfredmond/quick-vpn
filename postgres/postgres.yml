@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_PASSWORD: dZAMeoNPxhmW8jdY1BqY
     ports:
-      - 5432:5432
+      - 5432:5432 # might not need this once webapp are added to this service
     restart: always
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -16,7 +16,7 @@ services:
   adminer:
     image: adminer
     ports:
-      - 8080:8080
+      - 8080:8080 # change to something random
     restart: always
 
 volumes:
