@@ -1,0 +1,36 @@
+{
+    "MaxCount": 1,
+    "MinCount": 1,
+    "ImageId": "ami-0f844a9675b22ea32",
+    "InstanceType": "t3a.nano",
+    "KeyName": "vpn",
+    "EbsOptimized": true,
+    "NetworkInterfaces": [
+      {
+        "AssociatePublicIpAddress": true,
+        "DeviceIndex": 0,
+        "Groups": [
+          "sg-080295a824c71c674"
+        ]
+      }
+    ],
+    "TagSpecifications": [
+      {
+        "ResourceType": "instance",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "vpn2"
+          }
+        ]
+      }
+    ],
+    "IamInstanceProfile": {
+      "Arn": "arn:aws:iam::525067006432:instance-profile/vpn"
+    },
+    "PrivateDnsNameOptions": {
+      "HostnameType": "ip-name",
+      "EnableResourceNameDnsARecord": true,
+      "EnableResourceNameDnsAAAARecord": false
+    }
+  }

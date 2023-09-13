@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ip=$1
+name=$2
+
 dest="/etc/wireguard" # WG server main config dir
 vpnif="wg0" # Wireguard interface name
 _vpn_server_ip='10.106.28.1/32' # WG server's private IP
@@ -9,14 +12,18 @@ publkey="${dest}/$HOSTNAME.${vpnif}.publickey" # WG server pub key
 privatekey="${dest}/$HOSTNAME.${vpnif}.privatekey" # WG server private key
 pskkey="${dest}/$HOSTNAME.${vpnif}.presharedkey" # WG server shared key
 wgconf="/etc/wireguard/${vpnif}.conf" # WG server config file
+now=$(date +"%m-%d-%Y_%H_%M_%S") # get date and time stamp 
+_client_ip=$ip # vpn client IP
+_client_name=$name # vpn client name
+_client_pri="${dest}/client-config/${_client_name}.privatekey" # client private key
+_client_pub="${dest}/client-config/${_client_name}.publickey" # client public key
+_client_psk="${dest}/client-config/${_client_name}.presharedkey" # client pre shared key
+_client_conf="${dest}/client-config/${_client_name}.conf" # client config
+_client_dns_ip="1.1.1.1" # I am setting cloudflare but you can set whatever you want
+_bak_conf="${dest}/client-config/${vpnif}.conf.$now" # backup main wired $wgconf file
 
-_client_conf=$1
-_client_name=$2
-_client_pri=$3
-_client_ip=$4
-_client_pub=$5
-_client_psk=$6
-_client_dns_ip=$7
+# umask 077; wg genkey | tee "$_client_pri" | wg pubkey > "$_client_pub"
+# umask 077; wg genpsk > "$_client_psk"
 
 cat <<EOF_CLIENT  >"$_client_conf"
 # Config for $_client_name client #
@@ -35,9 +42,6 @@ PersistentKeepalive = 15
 PresharedKey = $(cat ${_client_psk})
 EOF_CLIENT
 
-# upload to s3
-aws s3 cp $_client_conf "s3://$HOSTNAME/wireguard/client-config/" &> /dev/null
-
 cat <<EOF_WG_CONG >>"${wgconf}"
  
 [Peer]
@@ -47,3 +51,8 @@ PublicKey = $(cat ${_client_pub})
 AllowedIPs = ${_client_ip}
 PresharedKey = $(cat ${_client_psk})
 EOF_WG_CONG
+
+# upload to s3
+aws s3 cp $_client_conf "s3://$HOSTNAME/wireguard/client-config/" &> /dev/null
+
+# systemctl restart wg-quick@wg0.service
