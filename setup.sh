@@ -106,7 +106,7 @@ PresharedKey = $(cat ${_client_psk})
 EOF_WG_CONG
 
     # upload to s3
-    aws s3 cp $_client_conf "s3://quick-vpn/${HOSTNAME}/"
+    aws s3 cp $_client_conf "s3://quick-vpn/${HOSTNAME}/" # quick-vpn/hostname/confs/conf + used/ 
     # aws s3 presign "s3://quick-vpn/${HOSTNAME}/${_client_name}.conf"
 
     echo $counter
@@ -117,3 +117,10 @@ echo All done
 systemctl enable wg-quick@wg0.service
 systemctl start wg-quick@wg0.service
 # systemctl restart wg-quick@wg0.service
+
+name=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
+public_ipv4_dns=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`
+hostname=`curl -s http://169.254.169.254/latest/meta-data/hostname`
+data='{"name":"'"${name}"'","public_ipv4_dns":"'"${public_ipv4_dns}"'","hostname":"'"${hostname}"'"}'
+
+curl --header "Content-Type: application/json" --request POST --data "$data" http://ec2-3-230-173-63.compute-1.amazonaws.com:5000/register-instance
