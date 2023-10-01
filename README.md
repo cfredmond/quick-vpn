@@ -12,11 +12,14 @@ wireguard vpn deployed to aws
    2. create security group
    ![Alt text](/img/security_group.png?raw=true)
    3. create instance profile
-2. connect to instance
-3. sudo -i
-4. aws s3 cp s3://quick-vpn/quick-vpn.zip .
-5. unzip quick-vpn.zip
-6. ./setup.sh
+   ![Alt text](/img/instance_profile.png?raw=true)
+2. connect to instance and run the following:
+   ```bash
+   sudo -i
+   aws s3 cp s3://quick-vpn/quick-vpn.zip .
+   unzip quick-vpn.zip
+   ./setup.sh
+   ```
 
 ## usage 
 1. download conf from s3
