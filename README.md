@@ -1,22 +1,34 @@
 # quick vpn
 wireguard vpn deployed to aws
 
+## requirements
+1. aws
+2. wireguard client
+
 ## build 
 1. launch ec2 instance
-   1. create key
+   1. select ami
+   ![Alt text](/img/ami.png?raw=true)
    2. create security group
-   3. create iam role
-2. connect and sudo -i
-3. aws s3 cp s3://quick-vpn/quick-vpn.zip .
-4. unzip quick-vpn.zip
-5. ./setup.sh
+   ![Alt text](/img/security_group.png?raw=true)
+   3. create instance profile
+2. connect to instance
+3. sudo -i
+4. aws s3 cp s3://quick-vpn/quick-vpn.zip .
+5. unzip quick-vpn.zip
+6. ./setup.sh
+
+## usage 
+1. download conf from s3
+2. mv downloaded conf to used folder in bucket
+3. import tunnel in client
+4. activate tunnel
 
 ## destroy
 1. delete ec2 instance 
-2. delete s3 bucket
+2. delete security group
 3. delete iam role
-4. delete security group 
-5. delete key
+4. delete s3 bucket
 
 ## developing
 1. make changes
