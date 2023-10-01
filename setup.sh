@@ -50,10 +50,10 @@ E_O_F_WG
 
 mkdir "$dest/scripts"
 
-mv "/root/quick-vpn/vpnif.firewall-up.sh" "$dest/scripts/${vpnif}.firewall-up.sh"
-mv "/root/quick-vpn/vpnif.firewall-down.sh" "$dest/scripts/${vpnif}.firewall-down.sh"
+mv "/root/vpnif.firewall-up.sh" "$dest/scripts/${vpnif}.firewall-up.sh"
+mv "/root/vpnif.firewall-down.sh" "$dest/scripts/${vpnif}.firewall-down.sh"
 
-mv "/root/quick-vpn/10-wireguard.conf" /etc/sysctl.d
+mv "/root/10-wireguard.conf" /etc/sysctl.d
 
 sysctl -p /etc/sysctl.d/10-wireguard.conf
 
@@ -62,9 +62,11 @@ chmod -v +x /etc/wireguard/scripts/*.sh
 mkdir -v "${dest}/client-config"
 cp -v "$wgconf" "$_bak_conf"
 
+aws s3 mb s3://${HOSTNAME}
+
 # Basic while loop
 counter=2
-while [ $counter -le 254 ]
+while [ $counter -le 7 ]
 do
     # generate keys and conf. upload conf to s3
     _client_ip="10.106.28.${counter}/32"
@@ -106,7 +108,7 @@ PresharedKey = $(cat ${_client_psk})
 EOF_WG_CONG
 
     # upload to s3
-    aws s3 cp $_client_conf "s3://quick-vpn/${HOSTNAME}/" # quick-vpn/hostname/confs/conf + used/ 
+    aws s3 cp $_client_conf "s3://${HOSTNAME}/" # quick-vpn/hostname/confs/conf + used/ 
     # aws s3 presign "s3://quick-vpn/${HOSTNAME}/${_client_name}.conf"
 
     echo $counter
@@ -118,9 +120,9 @@ systemctl enable wg-quick@wg0.service
 systemctl start wg-quick@wg0.service
 # systemctl restart wg-quick@wg0.service
 
-name=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
-public_ipv4_dns=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`
-hostname=`curl -s http://169.254.169.254/latest/meta-data/hostname`
-data='{"name":"'"${name}"'","public_ipv4_dns":"'"${public_ipv4_dns}"'","hostname":"'"${hostname}"'"}'
+# name=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
+# public_ipv4_dns=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`
+# hostname=`curl -s http://169.254.169.254/latest/meta-data/hostname`
+# data='{"name":"'"${name}"'","public_ipv4_dns":"'"${public_ipv4_dns}"'","hostname":"'"${hostname}"'"}'
 
-curl --header "Content-Type: application/json" --request POST --data "$data" http://ec2-3-230-173-63.compute-1.amazonaws.com:5000/register-instance
+# curl --header "Content-Type: application/json" --request POST --data "$data" http://ec2-3-230-173-63.compute-1.amazonaws.com:5000/register-instance
