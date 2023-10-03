@@ -1,32 +1,38 @@
 # Quick VPN
-Quickly setup a [Wireguard](https://www.wireguard.com) VPN on [AWS](https://aws.amazon.com/)
+Quickly setup a [Wireguard](https://www.wireguard.com) VPN on [AWS](https://aws.amazon.com/).
 
 ## Requirements
 1. AWS
 
 ## Setup
-1. Launch a EC2 instance
-   1. Select the Amazon Linux 2 AMI and 64-bit (x86) Architecture
-   ![Alt text](/img/ami.png?raw=true)
-   2. create security group
-   ![Alt text](/img/security_group.png?raw=true)
-   3. create instance profile
-   ![Alt text](/img/instance_profile.png?raw=true)
-   4. review your selection and click launch instance
-   ![Alt text](/img/launch_instance.png?raw=true)
-2. connect to instance and run the following:
+1. Launch an EC2 instance.
+   ![Alt text](/img/1.png?raw=true)
+   ![Alt text](/img/2.png?raw=true)
+   ![Alt text](/img/3.png?raw=true)
+   ![Alt text](/img/key-pair.png?raw=true)
+   ![Alt text](/img/4.png?raw=true)
+   ![Alt text](/img/5.png?raw=true)
+   ![Alt text](/img/7.png)
+2. Connect to the launched instance using EC2 Instance Connect and run the following commands. 
+   ![Alt text](/img/ec2_instance_connect.png)
    ```bash
    sudo -i
    aws s3 cp s3://quick-vpn/quick-vpn.zip .
    unzip quick-vpn.zip
    ./setup.sh
+   rm quick-vpn.zip setup.sh
    ```
+   The zip file copied from S3 includes a script that installs Wireguard as well as creates a bucket and uploads the generated key files to S3 for easy access.
+
 
 ## use
 1. download conf from s3
-2. mv downloaded conf to used folder in bucket
-3. import tunnel in client
-4. activate tunnel
+   1. mv downloaded conf to used folder in bucket
+2. import tunnel in client
+3. activate tunnel
+
+## recovery
+[TODO]
 
 ## delete
 1. delete ec2 instance 
@@ -40,5 +46,6 @@ Quickly setup a [Wireguard](https://www.wireguard.com) VPN on [AWS](https://aws.
 3. zip quick-vpn.zip setup.sh 10-wireguard.conf vpnif.firewall-*
 4. aws s3 cp quick-vpn.zip s3://quick-vpn
 
-## architecture 
-[TODO]
+## Architecture 
+* EC2
+* S3

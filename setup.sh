@@ -66,7 +66,7 @@ aws s3 mb s3://${HOSTNAME}
 
 # Basic while loop
 counter=2
-while [ $counter -le 7 ]
+while [ $counter -le 6 ]
 do
     # generate keys and conf. upload conf to s3
     _client_ip="10.106.28.${counter}/32"
