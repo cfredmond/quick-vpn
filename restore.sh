@@ -50,10 +50,10 @@ E_O_F_WG
 
 mkdir "$dest/scripts"
 
-mv "/root/quick-vpn-main/ec2/vpnif.firewall-up.sh" "$dest/scripts/${vpnif}.firewall-up.sh"
-mv "/root/quick-vpn-main/ec2/vpnif.firewall-down.sh" "$dest/scripts/${vpnif}.firewall-down.sh"
+mv "/root/vpnif.firewall-up.sh" "$dest/scripts/${vpnif}.firewall-up.sh"
+mv "/root/vpnif.firewall-down.sh" "$dest/scripts/${vpnif}.firewall-down.sh"
 
-mv "/root/quick-vpn-main/ec2/10-wireguard.conf" /etc/sysctl.d
+mv "/root/10-wireguard.conf" /etc/sysctl.d
 
 sysctl -p /etc/sysctl.d/10-wireguard.conf
 
@@ -64,16 +64,4 @@ cp -v "$wgconf" "$_bak_conf"
 
 systemctl enable wg-quick@wg0.service
 systemctl start wg-quick@wg0.service
-
-
-# install docker
-yum install docker -y
-
-usermod -a -G docker ec2-user
-
-wget https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) 
-mv docker-compose-$(uname -s)-$(uname -m) /usr/local/bin/docker-compose
-chmod -v +x /usr/local/sbin/docker-compose
-
-systemctl enable docker.service
-systemctl start docker.service 
+# systemctl restart wg-quick@wg0.service

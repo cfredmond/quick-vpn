@@ -1,1 +1,8 @@
-venv/
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+
+quick-vpn.zip
+
+.DS_Store
