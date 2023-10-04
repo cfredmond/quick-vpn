@@ -25,11 +25,10 @@ Quickly setup a [Wireguard](https://www.wireguard.com) VPN on [AWS](https://aws.
    The zip file copied from S3 includes a script that installs Wireguard as well as creates a bucket and uploads the generated key files to S3 for easy access.
 
 
-## use
-1. download conf from s3
-   1. mv downloaded conf to used folder in bucket
-2. import tunnel in client
-3. activate tunnel
+## Usage
+1. Download a key from from the S3 bucket created during setup. The bucket name is the EC2 instances hostname.
+2. Import the key into your Wireguard client and activate the tunnel.
+3. Verify that the tunnel is active in the client as well as by loading a web page.
 
 ## recovery
 [TODO]
